@@ -1,35 +1,46 @@
 name: Deploy static content to GitHub Pages
 
 on:
-push:
-branches:
-- main
-workflow_dispatch:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
 
 permissions:
-contents: read
-pages: write
-id-token: write
+  contents: read
+  pages: write
+  id-token: write
 
 concurrency:
-group: "pages"
-cancel-in-progress: true
+  group: "pages"
+  cancel-in-progress: true
 
 jobs:
-deploy:
-runs-on: ubuntu-latest
-steps:
-- name: Checkout
-uses: actions/checkout@v4
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-  - name: Setup Pages
-    uses: actions/configure-pages@v5
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
 
-  - name: Upload artifact
-    uses: actions/upload-pages-artifact@v3
-    with:
-      path: '.'
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
 
-  - name: Deploy to GitHub Pages
-    id: deployment
-    uses: actions/deploy-pages@v4
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+```eof
+
+### Why this will work:
+*   **Consistent Indentation:** Each `- name:` starts at the same level of indentation.
+*   **Parent-Child Relationship:** Every `uses:`, `with:`, and `path:` is correctly indented under its corresponding `- name:`.
+*   **Clean Syntax:** I removed any potential hidden character issues that can occur when copy-pasting into the GitHub web editor.
+
+**After you save this:**
+1.  Go to your Repository **Settings** > **Pages**.
+2.  Set the **Source** to **"GitHub Actions"**.
+3.  Go to the **Actions** tab, and you should see the run begin automatically.
