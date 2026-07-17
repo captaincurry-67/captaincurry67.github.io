@@ -24,34 +24,35 @@
         const App = {
             // ... existing methods ...
             downloadData() {
-    try {
-        const dataStr = JSON.stringify(Database.data, null, 2);
-        const blob = new Blob([dataStr], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `5th_MR_Ledger_${new Date().toISOString().slice(0,10)}.json`;
-        
-        // Hide the link so it doesn't cause a layout shift
-        link.style.display = 'none';
-        document.body.appendChild(link);
-        
-        link.click();
+                try {
+                    const dataStr = JSON.stringify(Database.data, null, 2);
+                    const blob = new Blob([dataStr], { type: "application/json" });
+                    const url = URL.createObjectURL(blob);
+                    
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `5th_MR_Ledger_${new Date().toISOString().slice(0,10)}.json`;
+                    
+                    // Hide the element completely
+                    link.style.display = 'none';
+                    document.body.appendChild(link);
+                    
+                    link.click();
 
-        // Use a short timeout to ensure the browser has enough time 
-        // to initiate the download before the element is destroyed.
-        setTimeout(() => {
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-        }, 100);
-        
-    } catch (err) {
-        console.error("Download failed:", err);
-    }
-}
+                    // Cleanup: Revoke URL and remove element after a short delay
+                    setTimeout(() => {
+                        document.body.removeChild(link);
+                        URL.revokeObjectURL(url);
+                    }, 100);
+                    
+                } catch (err) {
+                    console.error("Download failed:", err);
+                    // Optionally notify user via a custom UI element here
+                }
             },
-            logout() { /* ... */ }
+            logout() { 
+                /* ... existing logout logic ... */ 
+            }
         };
         // ... existing UI/HierarchyUI logic ...
     </script>
