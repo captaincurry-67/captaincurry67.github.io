@@ -1,28 +1,60 @@
-<!-- ... existing code ... -->
-        <!-- Main Application (Hidden by default) -->
-        <div id="app-view" class="w-full max-w-7xl hidden flex-col items-center">
-            
-            <header class="w-full border-b-2 border-tactical-gold pb-4 mb-8 text-center relative">
-                <h1 class="text-4xl md:text-5xl font-bold tracking-[0.2em] uppercase">
-                    <span class="text-tactical-gold">5th</span> Marine Regiment
-                </h1>
-                <p class="text-tactical-textMuted text-lg uppercase tracking-widest mt-2">Operational Command Ledger</p>
-                <div class="absolute top-0 right-0 flex items-center gap-4">
-                    <button onclick="App.downloadData()" class="border border-tactical-green text-tactical-green hover:bg-tactical-green hover:text-black px-3 py-1 text-sm rounded transition-colors">EXPORT DATA</button>
-                    <button onclick="App.logout()" class="border border-tactical-border hover:bg-tactical-panelHover px-3 py-1 text-sm rounded transition-colors">LOGOUT</button>
-                </div>
-            </header>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5th Marine Regiment | Command Ledger</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        tactical: {
+                            gold: '#c5a059',
+                            green: '#4a7c59',
+                            panel: '#1a1d21',
+                            panelHover: '#2a2e33',
+                            border: '#3e444a',
+                            textMuted: '#94a3b8'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-black text-white font-sans min-h-screen flex flex-col items-center p-4">
 
-            <main id="view-coc" class="w-full flex flex-col items-center">
-                <button onclick="Database.addBattalion()" class="mb-4 bg-tactical-green px-4 py-2 rounded text-sm font-bold uppercase hover:bg-tactical-gold transition-colors">+ Add Battalion</button>
-                <div class="bg-tactical-panel border border-tactical-border p-8 rounded w-full overflow-x-auto text-center" id="hierarchy-container"></div>
-            </main>
-        </div>
+    <div id="app-view" class="w-full max-w-7xl flex flex-col items-center">
+        
+        <header class="w-full border-b-2 border-tactical-gold pb-4 mb-8 text-center relative">
+            <h1 class="text-4xl md:text-5xl font-bold tracking-[0.2em] uppercase">
+                <span class="text-tactical-gold">5th</span> Marine Regiment
+            </h1>
+            <p class="text-tactical-textMuted text-lg uppercase tracking-widest mt-2">Operational Command Ledger</p>
+            <div class="absolute top-0 right-0 flex items-center gap-4">
+                <button onclick="App.downloadData()" class="border border-tactical-green text-tactical-green hover:bg-tactical-green hover:text-black px-3 py-1 text-sm rounded transition-colors">EXPORT DATA</button>
+                <button onclick="App.logout()" class="border border-tactical-border hover:bg-tactical-panelHover px-3 py-1 text-sm rounded transition-colors">LOGOUT</button>
+            </div>
+        </header>
+
+        <main id="view-coc" class="w-full flex flex-col items-center">
+            <button onclick="Database.addBattalion()" class="mb-4 bg-tactical-green px-4 py-2 rounded text-sm font-bold uppercase hover:bg-tactical-gold transition-colors">+ Add Battalion</button>
+            <div class="bg-tactical-panel border border-tactical-border p-8 rounded w-full overflow-x-auto text-center" id="hierarchy-container"></div>
+        </main>
+    </div>
 
     <script>
-        // ... existing Database object ...
+        const Database = {
+            data: { battalions: [] },
+            addBattalion() {
+                this.data.battalions.push({ id: Date.now(), name: "New Battalion", units: [] });
+                UI.render();
+            }
+        };
+
         const App = {
-            // ... existing methods ...
             downloadData() {
                 try {
                     const dataStr = JSON.stringify(Database.data, null, 2);
@@ -33,13 +65,10 @@
                     link.href = url;
                     link.download = `5th_MR_Ledger_${new Date().toISOString().slice(0,10)}.json`;
                     
-                    // Hide the element completely
                     link.style.display = 'none';
                     document.body.appendChild(link);
-                    
                     link.click();
 
-                    // Cleanup: Revoke URL and remove element after a short delay
                     setTimeout(() => {
                         document.body.removeChild(link);
                         URL.revokeObjectURL(url);
@@ -47,14 +76,24 @@
                     
                 } catch (err) {
                     console.error("Download failed:", err);
-                    // Optionally notify user via a custom UI element here
                 }
             },
             logout() { 
-                /* ... existing logout logic ... */ 
+                console.log("Logging out...");
+                window.location.reload();
             }
         };
-        // ... existing UI/HierarchyUI logic ...
+
+        const UI = {
+            render() {
+                const container = document.getElementById('hierarchy-container');
+                container.innerHTML = Database.data.battalions.length > 0 
+                    ? `<p>Active Battalions: ${Database.data.battalions.length}</p>` 
+                    : '<p class="text-tactical-textMuted italic">No battalions registered in the ledger.</p>';
+            }
+        };
+        
+        UI.render();
     </script>
 </body>
 </html>
