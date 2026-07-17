@@ -1,0 +1,48 @@
+<!-- ... existing code ... -->
+        <!-- Main Application (Hidden by default) -->
+        <div id="app-view" class="w-full max-w-7xl hidden flex-col items-center">
+            
+            <header class="w-full border-b-2 border-tactical-gold pb-4 mb-8 text-center relative">
+                <h1 class="text-4xl md:text-5xl font-bold tracking-[0.2em] uppercase">
+                    <span class="text-tactical-gold">5th</span> Marine Regiment
+                </h1>
+                <p class="text-tactical-textMuted text-lg uppercase tracking-widest mt-2">Operational Command Ledger</p>
+                <div class="absolute top-0 right-0 flex items-center gap-4">
+                    <button onclick="App.downloadData()" class="border border-tactical-green text-tactical-green hover:bg-tactical-green hover:text-black px-3 py-1 text-sm rounded transition-colors">EXPORT DATA</button>
+                    <button onclick="App.logout()" class="border border-tactical-border hover:bg-tactical-panelHover px-3 py-1 text-sm rounded transition-colors">LOGOUT</button>
+                </div>
+            </header>
+
+            <main id="view-coc" class="w-full flex flex-col items-center">
+                <button onclick="Database.addBattalion()" class="mb-4 bg-tactical-green px-4 py-2 rounded text-sm font-bold uppercase hover:bg-tactical-gold transition-colors">+ Add Battalion</button>
+                <div class="bg-tactical-panel border border-tactical-border p-8 rounded w-full overflow-x-auto text-center" id="hierarchy-container"></div>
+            </main>
+        </div>
+
+    <script>
+        // ... existing Database object ...
+        const App = {
+            // ... existing methods ...
+            downloadData() {
+                try {
+                    const dataStr = JSON.stringify(Database.data, null, 2);
+                    const blob = new Blob([dataStr], { type: "application/json" });
+                    const url = URL.createObjectURL(blob);
+                    
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `5th_MR_Ledger_${new Date().toISOString().slice(0,10)}.json`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                } catch (err) {
+                    console.error("Download failed:", err);
+                }
+            },
+            logout() { /* ... */ }
+        };
+        // ... existing UI/HierarchyUI logic ...
+    </script>
+</body>
+</html>
