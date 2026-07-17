@@ -33,15 +33,21 @@
                 <span class="text-tactical-gold">5th</span> Marine Regiment
             </h1>
             <p class="text-tactical-textMuted text-lg uppercase tracking-widest mt-2">Operational Command Ledger</p>
+            
             <div class="absolute top-0 right-0 flex items-center gap-4">
-                <button onclick="App.downloadData()" class="border border-tactical-green text-tactical-green hover:bg-tactical-green hover:text-black px-3 py-1 text-sm rounded transition-colors">EXPORT DATA</button>
-                <button onclick="App.logout()" class="border border-tactical-border hover:bg-tactical-panelHover px-3 py-1 text-sm rounded transition-colors">LOGOUT</button>
+                <button onclick="App.downloadData()" class="border border-tactical-green text-tactical-green hover:bg-tactical-green hover:text-black px-3 py-1 text-sm rounded transition-colors font-semibold uppercase tracking-wider">Export Data</button>
+                <button onclick="App.logout()" class="border border-tactical-border hover:bg-tactical-panelHover px-3 py-1 text-sm rounded transition-colors uppercase tracking-wider">Logout</button>
             </div>
         </header>
 
         <main id="view-coc" class="w-full flex flex-col items-center">
-            <button onclick="Database.addBattalion()" class="mb-4 bg-tactical-green px-4 py-2 rounded text-sm font-bold uppercase hover:bg-tactical-gold transition-colors">+ Add Battalion</button>
-            <div class="bg-tactical-panel border border-tactical-border p-8 rounded w-full overflow-x-auto text-center" id="hierarchy-container"></div>
+            <button onclick="Database.addBattalion()" class="mb-8 bg-tactical-green px-6 py-2 rounded text-sm font-bold uppercase hover:bg-tactical-gold transition-colors text-black tracking-widest">
+                + Add Battalion
+            </button>
+            
+            <div class="bg-tactical-panel border border-tactical-border p-8 rounded-lg w-full max-w-4xl shadow-2xl" id="hierarchy-container">
+                <!-- Content will be injected here by UI.render -->
+            </div>
         </main>
     </div>
 
@@ -88,8 +94,8 @@
             render() {
                 const container = document.getElementById('hierarchy-container');
                 container.innerHTML = Database.data.battalions.length > 0 
-                    ? `<p>Active Battalions: ${Database.data.battalions.length}</p>` 
-                    : '<p class="text-tactical-textMuted italic">No battalions registered in the ledger.</p>';
+                    ? `<div class="text-left"><h2 class="text-2xl font-bold mb-4 text-tactical-gold">Active Battalions</h2><ul class="space-y-2">${Database.data.battalions.map(b => `<li class="bg-tactical-panelHover p-3 rounded border border-tactical-border">${b.name}</li>`).join('')}</ul></div>` 
+                    : '<p class="text-tactical-textMuted italic py-10">No battalions registered in the ledger.</p>';
             }
         };
         
